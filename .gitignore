@@ -8,6 +8,9 @@ build/
 # macOS
 .DS_Store
 
+# Claude Code (cấu hình cá nhân)
+.claude/settings.local.json
+
 # Xcode
 xcuserdata/
 *.xcuserstate
