@@ -23,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppState.shared.applyActivationPolicy()
         Notifier.requestPermissionIfNeeded()
+        AppState.shared.autoCheckUpdatesIfEnabled()
     }
 
     // Đóng cửa sổ chính app vẫn chạy nền (scheduler + menu bar).

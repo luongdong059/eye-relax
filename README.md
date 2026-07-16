@@ -1,5 +1,7 @@
 # Eye Relax 👀
 
+[![CI](https://github.com/luongdong059/eye-relax/actions/workflows/ci.yml/badge.svg)](https://github.com/luongdong059/eye-relax/actions/workflows/ci.yml)
+
 Ứng dụng macOS nhắc tập thể dục cho mắt: một icon di chuyển theo các quỹ đạo trên màn hình (đè lên mọi ứng dụng, click-through) để mắt nhìn theo, kèm hiệu ứng trail, lịch nhắc theo chu kỳ và bài nghỉ 20-20-20.
 
 Kế hoạch chi tiết & tiến độ: [PLAN.md](PLAN.md).
@@ -37,6 +39,20 @@ Sinh lại app icon từ `cartoon.png` (khi đổi ảnh nguồn):
 - **Menu bar** (biểu tượng con mắt): xem giờ phiên tiếp theo, bắt đầu ngay / theo nhóm, hoãn 1 giờ, thoát app.
 - Khi đang tập: badge dưới đáy màn hình có nút **Bỏ qua bài** / **Dừng phiên**. Overlay không chặn chuột — bạn vẫn làm việc bình thường.
 - Đóng cửa sổ chính app vẫn chạy nền và nhắc theo lịch (mặc định 20 phút/lần).
+
+## Cập nhật & phát hành
+
+- App **tự kiểm tra bản mới** qua GitHub Releases (`releases/latest`) khi mở app (tắt được trong Chung → Cập nhật), hoặc kiểm tra tay từ menu bar / pane Chung. Có bản mới → tải asset `.zip`, đưa bản cũ vào Thùng rác, cài bản mới và tự khởi động lại.
+- **Quy trình phát hành** (CI tự làm hết qua [release.yml](.github/workflows/release.yml)):
+
+```bash
+git tag v0.2.0
+git push origin v0.2.0
+# → GitHub Actions: gắn version theo tag vào Info.plist, chạy test,
+#   đóng gói EyeRelax-v0.2.0.zip và tạo GitHub Release
+```
+
+- Mỗi push/PR vào `main` chạy [ci.yml](.github/workflows/ci.yml): `swift test` + đóng gói app + upload artifact.
 
 ## Kiến trúc nhanh
 

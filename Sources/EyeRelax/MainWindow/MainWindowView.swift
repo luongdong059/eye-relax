@@ -45,7 +45,7 @@ struct MainWindowView: View {
         } detail: {
             switch pane ?? .schedule {
             case .general:
-                GeneralPane(settings: appState.settings)
+                GeneralPane(settings: appState.settings, updater: appState.updater)
             case .exercises:
                 ExercisesPane(library: appState.library)
             case .icon:

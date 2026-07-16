@@ -1,0 +1,40 @@
+name: Release
+
+# Đẩy tag dạng v* (vd: v0.2.0) → build, gắn version vào Info.plist theo tag,
+# nén .zip và tạo GitHub Release. UpdateChecker trong app đọc release này
+# qua API `releases/latest` để tự cập nhật.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & phát hành
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gắn version từ tag vào Info.plist
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" Support/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $GITHUB_RUN_NUMBER" Support/Info.plist
+          echo "Version: $VERSION (build $GITHUB_RUN_NUMBER)"
+
+      - name: Chạy unit tests
+        run: swift test
+
+      - name: Đóng gói EyeRelax.app
+        run: ./scripts/build-app.sh
+
+      - name: Nén app
+        run: ditto -c -k --keepParent build/EyeRelax.app "build/EyeRelax-${GITHUB_REF_NAME}.zip"
+
+      - name: Tạo GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/EyeRelax-*.zip
+          generate_release_notes: true

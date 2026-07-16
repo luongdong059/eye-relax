@@ -11,6 +11,7 @@ final class AppState: ObservableObject {
     let library = ExerciseLibrary(storageURL: ExerciseLibrary.defaultStorageURL())
     let runner = ExerciseRunner()
     let scheduler = ExerciseScheduler()
+    @MainActor lazy var updater = UpdateChecker()
 
     private let overlay = OverlayController()
     private var cancellables: Set<AnyCancellable> = []
@@ -70,6 +71,15 @@ final class AppState: ObservableObject {
 
     func applyActivationPolicy() {
         NSApp.setActivationPolicy(settings.hideDockIcon ? .accessory : .regular)
+    }
+
+    /// Kiểm tra bản mới trong nền, chờ vài giây cho app ổn định sau khi mở.
+    func autoCheckUpdatesIfEnabled() {
+        guard settings.autoCheckUpdates else { return }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 5_000_000_000)
+            await updater.check(silent: true)
+        }
     }
 
     // MARK: - Điều khiển phiên tập

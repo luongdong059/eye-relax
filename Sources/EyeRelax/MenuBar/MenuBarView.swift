@@ -39,6 +39,12 @@ struct MenuBarView: View {
             NSApp.activate(ignoringOtherApps: true)
         }
 
+        Button("Kiểm tra bản cập nhật…") {
+            openWindow(id: "main")
+            NSApp.activate(ignoringOtherApps: true)
+            Task { await appState.updater.check() }
+        }
+
         Divider()
 
         Button("Thoát Eye Relax") { NSApp.terminate(nil) }

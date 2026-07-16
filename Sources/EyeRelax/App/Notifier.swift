@@ -15,13 +15,23 @@ enum Notifier {
     }
 
     static func postSessionReady() {
+        post(title: "Đến giờ tập mắt 👀",
+             body: "Mở menu bar (biểu tượng con mắt) và bấm Bắt đầu ngay.")
+    }
+
+    static func postUpdateAvailable(_ version: String) {
+        post(title: "Eye Relax \(version) đã có 🎉",
+             body: "Mở Eye Relax → Chung → Cập nhật để tải và cài bản mới.")
+    }
+
+    private static func post(title: String, body: String) {
         guard isBundled else {
             NSSound.beep()
             return
         }
         let content = UNMutableNotificationContent()
-        content.title = "Đến giờ tập mắt 👀"
-        content.body = "Mở menu bar (biểu tượng con mắt) và bấm Bắt đầu ngay."
+        content.title = title
+        content.body = body
         content.sound = .default
         let request = UNNotificationRequest(identifier: UUID().uuidString,
                                             content: content, trigger: nil)

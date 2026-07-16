@@ -324,6 +324,8 @@ eye-relax/
 
 ### M7 — Hoàn thiện & Phát hành (còn lại)
 - [x] Badge Dừng/Bỏ qua khi đang chạy; dựng lại overlay khi đổi độ phân giải/tháo màn hình.
+- [x] Đẩy code lên GitHub (`luongdong059/eye-relax`) + **CI**: test & đóng gói mỗi push/PR (`ci.yml`), phát hành theo tag `v*` (`release.yml`).
+- [x] **Tự cập nhật qua GitHub Releases**: so semver với `releases/latest`, tải zip, cài và tự khởi động lại (UpdateChecker + pane Chung → Cập nhật, kèm auto-check khi mở app).
 - [ ] Thông báo có nút hành động (Bắt đầu / Hoãn) qua `UNNotificationAction`.
 - [ ] Badge đếm ngược trên Dock icon (nice-to-have); đo và tinh chỉnh hiệu năng (CPU khi idle ~0%, khi chạy < 10%).
 - [ ] Archive, ký Developer ID, **notarize**, đóng gói DMG (hoặc phát hành App Store — cần sandbox, vẫn tương thích vì không dùng API đặc quyền).
