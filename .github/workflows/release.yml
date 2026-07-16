@@ -33,8 +33,15 @@ jobs:
       - name: Nén app
         run: ditto -c -k --keepParent build/EyeRelax.app "build/EyeRelax-${GITHUB_REF_NAME}.zip"
 
+      - name: Đóng gói DMG
+        run: |
+          ./scripts/make-dmg.sh
+          mv build/EyeRelax.dmg "build/EyeRelax-${GITHUB_REF_NAME}.dmg"
+
       - name: Tạo GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/EyeRelax-*.zip
+          files: |
+            build/EyeRelax-*.zip
+            build/EyeRelax-*.dmg
           generate_release_notes: true

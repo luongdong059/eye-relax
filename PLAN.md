@@ -246,6 +246,7 @@ Chi tiết từng mục và thông số cấu hình:
 
 ### 7.4. Trong lúc chạy bài tập
 - Icon + trail di chuyển; góc màn hình hiện tên bài tập + nút **Bỏ qua bài** / **Dừng** (vùng nhỏ này là panel thứ hai **có nhận** chuột, tách khỏi overlay click-through).
+- Hoàn thành bài cuối → **màn chúc mừng 6s**: pháo bông nổ (Canvas, hàm thuần theo thời gian), câu chúc ngẫu nhiên theo phiên, nhắc uống nước 💧 và bổ sung vitamin A 🥕, footer "Design by Dong".
 - Phím tắt `Esc` (global hotkey — nice-to-have) hoặc click menu bar để dừng.
 
 ---
@@ -322,13 +323,17 @@ eye-relax/
 - [x] Nút "Xem thử" từng bài / chạy cả nhóm; nút "Tập ngay" ở sidebar.
 - [x] Tuỳ chọn ẩn Dock icon (`setActivationPolicy(.accessory)`).
 
-### M7 — Hoàn thiện & Phát hành (còn lại)
+### M7 — Hoàn thiện & Phát hành (gần xong)
 - [x] Badge Dừng/Bỏ qua khi đang chạy; dựng lại overlay khi đổi độ phân giải/tháo màn hình.
 - [x] Đẩy code lên GitHub (`luongdong059/eye-relax`) + **CI**: test & đóng gói mỗi push/PR (`ci.yml`), phát hành theo tag `v*` (`release.yml`).
 - [x] **Tự cập nhật qua GitHub Releases**: so semver với `releases/latest`, tải zip, cài và tự khởi động lại (UpdateChecker + pane Chung → Cập nhật, kèm auto-check khi mở app).
-- [ ] Thông báo có nút hành động (Bắt đầu / Hoãn) qua `UNNotificationAction`.
-- [ ] Badge đếm ngược trên Dock icon (nice-to-have); đo và tinh chỉnh hiệu năng (CPU khi idle ~0%, khi chạy < 10%).
-- [ ] Archive, ký Developer ID, **notarize**, đóng gói DMG (hoặc phát hành App Store — cần sandbox, vẫn tương thích vì không dùng API đặc quyền).
+- [x] **Pháo bông chúc mừng** khi hoàn thành cả phiên (6s, Canvas thuần theo thời gian) + lời chúc + nhắc uống nước / bổ sung vitamin A. Dừng tay thì bỏ qua.
+- [x] Thông báo có nút hành động (Bắt đầu ngay / Hoãn lại) qua `UNNotificationAction` + delegate xử lý.
+- [x] Badge đếm ngược phiên tiếp theo trên Dock icon (bật/tắt trong pane Chung).
+- [x] Đóng gói **DMG** (`scripts/make-dmg.sh`, kèm symlink /Applications) — đính kèm cả zip lẫn DMG vào mỗi Release.
+- [x] **LICENSE (MIT)** + credit "Design by Dong" (README, pane Giới thiệu, card chúc mừng, Info.plist).
+- [ ] Đo và tinh chỉnh hiệu năng (CPU khi idle ~0%, khi chạy < 10%).
+- [ ] Ký Developer ID + **notarize** (cần Apple Developer Program; hiện ký ad-hoc — máy khác cần chuột phải → Open lần đầu).
 
 **Tổng ước tính: ~2-3 tuần** (part-time có thể 4-5 tuần).
 

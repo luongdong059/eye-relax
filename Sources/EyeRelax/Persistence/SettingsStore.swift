@@ -23,6 +23,9 @@ final class SettingsStore: ObservableObject {
     @Published var autoCheckUpdates: Bool {
         didSet { defaults.set(autoCheckUpdates, forKey: Keys.autoCheckUpdates) }
     }
+    @Published var showDockCountdown: Bool {
+        didSet { defaults.set(showDockCountdown, forKey: Keys.dockCountdown) }
+    }
     @Published var icon: IconConfig {
         didSet { saveCodable(icon, key: Keys.icon) }
     }
@@ -41,6 +44,7 @@ final class SettingsStore: ObservableObject {
         schedulingEnabled = defaults.object(forKey: Keys.schedulingEnabled) as? Bool ?? true
         hideDockIcon = defaults.bool(forKey: Keys.hideDock)
         autoCheckUpdates = defaults.object(forKey: Keys.autoCheckUpdates) as? Bool ?? true
+        showDockCountdown = defaults.object(forKey: Keys.dockCountdown) as? Bool ?? true
         icon = Self.loadCodable(IconConfig.self, key: Keys.icon, from: defaults) ?? IconConfig()
         trail = Self.loadCodable(TrailConfig.self, key: Keys.trail, from: defaults) ?? TrailConfig()
     }
@@ -78,6 +82,7 @@ final class SettingsStore: ObservableObject {
         static let schedulingEnabled = "schedulingEnabled"
         static let hideDock = "hideDockIcon"
         static let autoCheckUpdates = "autoCheckUpdates"
+        static let dockCountdown = "showDockCountdown"
         static let icon = "iconConfig"
         static let trail = "trailConfig"
     }

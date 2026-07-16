@@ -15,6 +15,7 @@ final class AppState: ObservableObject {
 
     private let overlay = OverlayController()
     private var cancellables: Set<AnyCancellable> = []
+    private var dockBadgeTimer: Timer?
 
     private init() {
         scheduler.onFire = { [weak self] in self?.handleScheduledFire() }
@@ -66,7 +67,35 @@ final class AppState: ObservableObject {
             self?.scheduler.handleWake()
         }
 
+        // Dock badge đếm ngược: cập nhật mỗi 30s + khi mốc hẹn/cài đặt đổi.
+        let badgeTimer = Timer(timeInterval: 30, repeats: true) { [weak self] _ in
+            self?.updateDockBadge()
+        }
+        RunLoop.main.add(badgeTimer, forMode: .common)
+        dockBadgeTimer = badgeTimer
+        scheduler.$nextFireDate
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.updateDockBadge() }
+            .store(in: &cancellables)
+        settings.$showDockCountdown
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.updateDockBadge() }
+            .store(in: &cancellables)
+
         rescheduleFromNow()
+    }
+
+    /// Badge trên Dock icon: số phút đến phiên tập tiếp theo.
+    private func updateDockBadge() {
+        guard settings.showDockCountdown, !settings.hideDockIcon,
+              runner.session == nil,
+              let next = scheduler.nextFireDate else {
+            NSApp.dockTile.badgeLabel = nil
+            return
+        }
+        let minutes = max(0, Int((next.timeIntervalSinceNow / 60).rounded(.up)))
+        NSApp.dockTile.badgeLabel = "\(minutes)p"
     }
 
     func applyActivationPolicy() {

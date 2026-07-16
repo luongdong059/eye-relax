@@ -34,6 +34,11 @@ struct OverlayContentView: View {
                         RestCard(remaining: remaining)
                             .position(x: geo.size.width / 2, y: geo.size.height / 2)
 
+                    case .celebration(let remaining):
+                        CelebrationView(
+                            elapsed: ExerciseRunner.celebrationDuration - remaining,
+                            seed: celebrationSeed)
+
                     case nil:
                         EmptyView()
                     }
@@ -42,6 +47,11 @@ struct OverlayContentView: View {
             }
         }
         .allowsHitTesting(false)
+    }
+
+    /// Seed pháo bông theo phiên: mỗi phiên một dàn pháo và lời chúc riêng.
+    private var celebrationSeed: UInt64 {
+        UInt64(bitPattern: Int64((runner.session?.startDate.timeIntervalSince1970 ?? 0) * 1000))
     }
 
     /// Toạ độ chuẩn hoá [0,1]² → toạ độ view, chừa lề an toàn.

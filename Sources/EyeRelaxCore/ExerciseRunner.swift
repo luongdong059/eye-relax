@@ -21,6 +21,10 @@ public final class ExerciseRunner: ObservableObject {
         public let startDate: Date
         public let items: [Item]
         public var totalDuration: TimeInterval { items.last?.end ?? 0 }
+        /// Tổng thời gian gồm cả màn chúc mừng cuối phiên.
+        public var endWithCelebration: TimeInterval {
+            totalDuration + ExerciseRunner.celebrationDuration
+        }
     }
 
     public enum Frame {
@@ -30,6 +34,8 @@ public final class ExerciseRunner: ObservableObject {
         case active(exercise: Exercise, sample: PathSample, trail: [PathSample])
         /// Bài nghỉ 20-20-20: hiện thông điệp + đếm ngược.
         case rest(exercise: Exercise, remaining: TimeInterval)
+        /// Hoàn thành cả phiên: pháo bông + lời chúc.
+        case celebration(remaining: TimeInterval)
     }
 
     @Published public private(set) var session: Session?
@@ -38,6 +44,9 @@ public final class ExerciseRunner: ObservableObject {
     public var onFinish: (() -> Void)?
 
     public static let intermissionDuration: TimeInterval = 2
+    /// Thời lượng màn pháo bông chúc mừng sau bài cuối. Chỉ chạy khi phiên
+    /// kết thúc tự nhiên — bấm Dừng thì bỏ qua.
+    public static let celebrationDuration: TimeInterval = 6
 
     /// Bù thời gian khi người dùng bấm "bỏ qua bài".
     private var skipOffset: TimeInterval = 0
@@ -65,7 +74,7 @@ public final class ExerciseRunner: ObservableObject {
         // Timer thưa chỉ để phát hiện hết phiên; render không phụ thuộc nó.
         let timer = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
             guard let self, let session = self.session else { return }
-            if self.elapsed(at: Date()) >= session.totalDuration {
+            if self.elapsed(at: Date()) >= session.endWithCelebration {
                 self.finish()
             }
         }
@@ -112,7 +121,16 @@ public final class ExerciseRunner: ObservableObject {
     /// gian giữa các điểm trail (giây).
     public func frame(at date: Date, trailCount: Int = 0,
                       trailSpacing: TimeInterval = 0.045) -> Frame? {
-        guard let item = currentItem(at: date) else { return nil }
+        guard let item = currentItem(at: date) else {
+            // Hết bài cuối → màn chúc mừng trước khi đóng overlay.
+            if let session, session.totalDuration > 0 {
+                let t = elapsed(at: date)
+                if t >= session.totalDuration && t < session.endWithCelebration {
+                    return .celebration(remaining: session.endWithCelebration - t)
+                }
+            }
+            return nil
+        }
         let ex = item.exercise
         let t = elapsed(at: date) - item.start
 

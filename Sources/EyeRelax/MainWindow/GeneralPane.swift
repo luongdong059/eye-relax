@@ -25,6 +25,9 @@ struct GeneralPane: View {
                 Text("Khi ẩn Dock icon, mở lại cửa sổ này từ biểu tượng con mắt trên menu bar.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                Toggle("Đếm ngược phiên tiếp theo trên Dock icon", isOn: $settings.showDockCountdown)
+                    .disabled(settings.hideDockIcon)
             }
 
             Section("Màn hình") {
@@ -66,6 +69,8 @@ struct GeneralPane: View {
 
             Section("Giới thiệu") {
                 LabeledContent("Phiên bản", value: appVersion)
+                LabeledContent("Thiết kế", value: "Design by Dong ✦")
+                LabeledContent("Giấy phép", value: "MIT License")
                 Text("Eye Relax nhắc bạn tập thể dục cho mắt theo chu kỳ: mắt nhìn theo icon di chuyển trên màn hình, kết hợp nghỉ ngơi theo quy tắc 20-20-20.")
                     .font(.caption)
                     .foregroundStyle(.secondary)

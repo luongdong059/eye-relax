@@ -106,8 +106,22 @@ final class ExerciseRunnerTests: XCTestCase {
             XCTAssertEqual(ex.id, ex2.id)
         } else { XCTFail("phải là intermission bài 2") }
 
-        // Quá tổng thời lượng: hết frame.
-        XCTAssertNil(runner.frame(at: t0.addingTimeInterval(18)))
+        // Hết bài cuối (17s) → màn chúc mừng trong 6s.
+        if case .celebration(let remaining)? = runner.frame(at: t0.addingTimeInterval(18)) {
+            XCTAssertEqual(remaining, 5, accuracy: 0.001)
+        } else { XCTFail("phải là celebration sau bài cuối") }
+
+        // Quá cả màn chúc mừng: hết frame.
+        XCTAssertNil(runner.frame(at: t0.addingTimeInterval(17 + 6.01)))
+    }
+
+    func testManualStopEndsSessionImmediately() {
+        let runner = ExerciseRunner()
+        let t0 = Date()
+        runner.start(exercises: [makeExercise(.horizontal, laps: 2)], at: t0)
+        runner.stop()
+        XCTAssertNil(runner.session, "dừng tay không có celebration")
+        XCTAssertNil(runner.frame(at: t0.addingTimeInterval(1)))
     }
 
     func testSkipJumpsToNextExercise() {

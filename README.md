@@ -38,7 +38,8 @@ Sinh lại app icon từ `cartoon.png` (khi đổi ảnh nguồn):
 - **Cửa sổ chính** (mở khi click Dock icon): cấu hình lịch nhắc, bật/tắt và tinh chỉnh từng bài tập (tốc độ 0.5x–3x, số vòng), chọn icon (mắt hoạt hình mặc định / SF Symbol / emoji / ảnh riêng), chỉnh trail, nút **Tập ngay**.
 - **Menu bar** (biểu tượng con mắt): xem giờ phiên tiếp theo, bắt đầu ngay / theo nhóm, hoãn 1 giờ, thoát app.
 - Khi đang tập: badge dưới đáy màn hình có nút **Bỏ qua bài** / **Dừng phiên**. Overlay không chặn chuột — bạn vẫn làm việc bình thường.
-- Đóng cửa sổ chính app vẫn chạy nền và nhắc theo lịch (mặc định 20 phút/lần).
+- Hoàn thành cả phiên: **pháo bông chúc mừng** 🎆 kèm nhắc uống nước và bổ sung vitamin A.
+- Đóng cửa sổ chính app vẫn chạy nền và nhắc theo lịch (mặc định 20 phút/lần); Dock icon hiện **đếm ngược** đến phiên tiếp theo, thông báo có nút **Bắt đầu / Hoãn** ngay trên banner.
 
 ## Cập nhật & phát hành
 
@@ -59,3 +60,11 @@ git push origin v0.2.0
 - `Sources/EyeRelaxCore` — logic thuần (models, quỹ đạo tham số, runner, scheduler), phủ unit test.
 - `Sources/EyeRelax` — UI: overlay `NSPanel` click-through (`.screenSaver` + `.fullScreenAuxiliary`), cửa sổ chính SwiftUI, menu bar.
 - Không cần quyền Accessibility/Screen Recording — overlay chỉ vẽ, không đọc màn hình.
+
+## Giấy phép
+
+Phát hành theo [MIT License](LICENSE).
+
+---
+
+*Design by Dong ✦*
