@@ -19,6 +19,13 @@ jobs:
       - name: Đóng gói EyeRelax.app
         run: ./scripts/build-app.sh
 
+      - name: Kiểm tra cấu trúc app (chống tái diễn crash thiếu resource)
+        run: |
+          test -f build/EyeRelax.app/Contents/Resources/EyeRelax_EyeRelax.bundle/cartoon.png
+          test -f build/EyeRelax.app/Contents/Resources/AppIcon.icns
+          test -x build/EyeRelax.app/Contents/MacOS/EyeRelax
+          echo "Cấu trúc app OK"
+
       - name: Nén app làm artifact
         run: ditto -c -k --keepParent build/EyeRelax.app build/EyeRelax.zip
 

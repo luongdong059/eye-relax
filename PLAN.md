@@ -350,6 +350,7 @@ eye-relax/
 | Timer lệch sau khi Mac sleep | Lưu `nextFireDate` tuyệt đối, resync khi nhận `didWakeNotification` |
 | Đa màn hình: icon chạy sai màn | MVP chọn 1 màn hình (mặc định màn có chuột); panel tạo lại khi nhận `NSApplication.didChangeScreenParametersNotification` |
 | `cartoon.png` chỉ 128px, không đủ chuẩn app icon 1024px | Vẽ lại dạng vector (line-art đơn giản, nhanh) hoặc upscale; giữ file gốc làm icon mặc định cho overlay |
+| `Bundle.module` của SPM executable **crash trên máy người dùng** (đã xảy ra ở v0.2.1): accessor sinh ra chỉ tìm bundle ở gốc .app và đường-dẫn-build-tuyệt-đối của máy build — bản build local chạy được nhờ fallback `.build/` nên không phát hiện sớm | Không dùng `Bundle.module`; tự tìm `EyeRelax_EyeRelax.bundle` ở `Contents/Resources` (nil → fallback SF Symbol, không crash). CI có bước verify cấu trúc .app; khi test bản đóng gói phải giấu `.build/` đi để tránh false negative |
 | App Store review với overlay | Không dùng private API; overlay là tính năng chính, mô tả rõ trong review notes |
 
 ---

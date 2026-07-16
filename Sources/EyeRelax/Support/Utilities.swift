@@ -23,7 +23,26 @@ extension Color {
 
 /// Cache ảnh icon (bundle + icon người dùng import).
 enum IconAssets {
-    static let cartoon: NSImage? = Bundle.module
+    /// Resource bundle của SPM, tìm thủ công thay vì `Bundle.module`:
+    /// accessor SPM sinh ra chỉ tìm ở gốc .app và đường-dẫn-build-tuyệt-đối
+    /// của MÁY BUILD, nên bản phân phối (CI build) sẽ `fatalError` trên máy
+    /// người dùng dù bundle nằm đúng chuẩn trong Contents/Resources.
+    /// Trả về `nil` thay vì crash — IconView tự fallback sang SF Symbol.
+    static let resourceBundle: Bundle? = {
+        let name = "EyeRelax_EyeRelax.bundle"
+        // .app: Contents/Resources (build-app.sh copy vào đây).
+        // swift run: resourceURL = thư mục chứa executable, SPM đặt bundle ngay đó.
+        let candidates = [Bundle.main.resourceURL, Bundle.main.bundleURL]
+        for base in candidates {
+            if let url = base?.appendingPathComponent(name),
+               let bundle = Bundle(url: url) {
+                return bundle
+            }
+        }
+        return nil
+    }()
+
+    static let cartoon: NSImage? = resourceBundle?
         .url(forResource: "cartoon", withExtension: "png")
         .flatMap { NSImage(contentsOf: $0) }
 
