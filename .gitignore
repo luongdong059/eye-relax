@@ -1,0 +1,14 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Sản phẩm đóng gói
+build/
+
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
