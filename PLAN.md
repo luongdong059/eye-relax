@@ -332,7 +332,8 @@ eye-relax/
 - [x] Badge đếm ngược phiên tiếp theo trên Dock icon (bật/tắt trong pane Chung).
 - [x] Đóng gói **DMG** (`scripts/make-dmg.sh`, kèm symlink /Applications) — đính kèm cả zip lẫn DMG vào mỗi Release.
 - [x] **LICENSE (MIT)** + credit "Design by Dong" (README, pane Giới thiệu, card chúc mừng, Info.plist).
-- [ ] Đo và tinh chỉnh hiệu năng (CPU khi idle ~0%, khi chạy < 10%).
+- [x] Đo hiệu năng (M-series, 16/07/2026): **idle 0.0% CPU / ~66MB RAM** ✅; khi chạy bài tập ~12-20% sau khi tối ưu (trail vẽ 1 Canvas thay vì N view, khoá 60fps trên màn 120Hz — trước đó spike tới 34%). Đã kiểm chứng glow không phải hotspot; chi phí nền là redraw toàn màn hình 60fps của SwiftUI.
+- [ ] Hạ CPU khi chạy xuống < 10%: hướng khả thi nhất là panel nhỏ di chuyển theo icon (`setFrameOrigin` mỗi frame, WindowServer composite) thay vì panel toàn màn hình redraw — refactor OverlayController, làm ở bản sau.
 - [ ] Ký Developer ID + **notarize** (cần Apple Developer Program; hiện ký ad-hoc — máy khác cần chuột phải → Open lần đầu).
 
 **Tổng ước tính: ~2-3 tuần** (part-time có thể 4-5 tuần).

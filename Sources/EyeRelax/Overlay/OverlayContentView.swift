@@ -13,7 +13,9 @@ struct OverlayContentView: View {
 
     var body: some View {
         GeometryReader { geo in
-            TimelineView(.animation) { context in
+            // Khoá 60fps: trên màn ProMotion 120Hz giảm nửa tải CPU mà mắt
+            // thường không phân biệt được với chuyển động chậm cỡ này.
+            TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { context in
                 let trailCount = settings.trail.enabled ? settings.trail.length : 0
                 let frame = runner.frame(at: context.date, trailCount: trailCount)
                 ZStack {
@@ -72,14 +74,36 @@ struct TrailView: View {
 
     var body: some View {
         switch config.style {
+        // Dots & line vẽ trong MỘT Canvas: một draw pass mỗi frame thay vì
+        // hàng chục view reposition — giảm hẳn CPU khi animation chạy.
         case .dots:
-            ForEach(trail.indices, id: \.self) { i in
-                Circle()
-                    .fill(dotColor)
-                    .frame(width: dotSize(i), height: dotSize(i))
-                    .opacity(fade(i) * 0.8)
-                    .position(OverlayContentView.mapToScreen(trail[i], in: size))
+            Canvas { context, _ in
+                for i in trail.indices {
+                    let point = OverlayContentView.mapToScreen(trail[i], in: size)
+                    let d = dotSize(i)
+                    let rect = CGRect(x: point.x - d / 2, y: point.y - d / 2,
+                                      width: d, height: d)
+                    context.fill(Path(ellipseIn: rect),
+                                 with: .color(dotColor.opacity(fade(i) * 0.8)))
+                }
             }
+            .allowsHitTesting(false)
+        case .line:
+            Canvas { context, _ in
+                guard let first = trail.first else { return }
+                var path = Path()
+                path.move(to: OverlayContentView.mapToScreen(first, in: size))
+                for sample in trail.dropFirst() {
+                    path.addLine(to: OverlayContentView.mapToScreen(sample, in: size))
+                }
+                context.addFilter(.shadow(color: .black.opacity(0.3), radius: 2))
+                context.stroke(path, with: .color(dotColor.opacity(0.55)),
+                               style: StrokeStyle(lineWidth: max(3, icon.size * 0.1),
+                                                  lineCap: .round, lineJoin: .round))
+            }
+            .allowsHitTesting(false)
+        // Bản sao icon cần render view đầy đủ (ảnh/emoji/symbol) — chấp nhận
+        // nặng hơn hai kiểu trên.
         case .iconCopies:
             ForEach(trail.indices, id: \.self) { i in
                 IconView(config: icon,
@@ -88,18 +112,6 @@ struct TrailView: View {
                     .opacity(fade(i) * 0.7)
                     .position(OverlayContentView.mapToScreen(trail[i], in: size))
             }
-        case .line:
-            Path { path in
-                guard let first = trail.first else { return }
-                path.move(to: OverlayContentView.mapToScreen(first, in: size))
-                for sample in trail.dropFirst() {
-                    path.addLine(to: OverlayContentView.mapToScreen(sample, in: size))
-                }
-            }
-            .stroke(dotColor.opacity(0.55),
-                    style: StrokeStyle(lineWidth: max(3, icon.size * 0.1),
-                                       lineCap: .round, lineJoin: .round))
-            .shadow(color: .black.opacity(0.3), radius: 2)
         }
     }
 
